@@ -365,7 +365,7 @@ double VelocityProfileGenerator::calc_distance(const double& v_i,
     if (a == 0.0)
       d = std::numeric_limits<double>::infinity();
     else
-      d = (pow(v_f, 2) - pow(v_i, 2))/(2*a);  // <- Update
+      d = std::abs(pow(v_f, 2) - pow(v_i, 2))/(2*a);  // <- Update
   }
   return d;
 }
