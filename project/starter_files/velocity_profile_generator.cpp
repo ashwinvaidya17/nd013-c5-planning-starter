@@ -28,7 +28,7 @@ void VelocityProfileGenerator::setup(const double& time_gap,
 
 /*
 This class computes a velocity trajectory from a starting speed to a desired
-speed. It works in unison with the Behavioral plannner  as it needs to build a
+speed. It works in unison with the Behavioral planner  as it needs to build a
 velocity profile for each of the states that the vehicle can be in.
 In the "Follow_lane" state we need to either speed up or speed down to maintain
 a speed target. In the "decel_to_stop" state we need to create a profile that
@@ -362,7 +362,10 @@ double VelocityProfileGenerator::calc_distance(const double& v_i,
     // v_i (initial velocity) to v_f (final velocity) at a constant
     // acceleration/deceleration "a". HINT look at the description of this
     // function. Make sure you handle div by 0
-    d = 0;  // <- Update
+    if (a == 0.0)
+      d = std::numeric_limits<double>::infinity();
+    else
+      d = (pow(v_f, 2) - pow(v_i, 2))/(2*a);  // <- Update
   }
   return d;
 }
@@ -373,7 +376,7 @@ acceleration across a given distance, with initial speed v_i.
 Make sure to check the discriminant of the radical. If it is negative,
 return zero as the final speed.
 Inputs : v_i - the initial speed in m / s.
-v_f - the ginal speed in m / s.
+v_f - the final speed in m / s.
 a - the acceleration in m / s ^ 2.
 */
 double VelocityProfileGenerator::calc_final_speed(const double& v_i,
@@ -385,7 +388,7 @@ double VelocityProfileGenerator::calc_final_speed(const double& v_i,
   // and make v_f = 0 in that case. If the discriminant is inf or nan return
   // infinity
 
-  double disc = 0;  // <- Fix this
+  double disc = pow(v_i, 2) + 2*a*d;  // <- Fix this
   if (disc <= 0.0) {
     v_f = 0.0;
   } else if (disc == std::numeric_limits<double>::infinity() ||
